@@ -1,0 +1,6 @@
+.offers_list {
+  display: flex;
+  justify-content: start;
+  flex-wrap: wrap;
+  gap: 3rem;
+}

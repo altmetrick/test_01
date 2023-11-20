@@ -1,0 +1,56 @@
+.date_picker {
+  font-size: 1.6rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.actions {
+  font-size: 2.2rem;
+  position: relative;
+  cursor: pointer;
+  margin: 2rem auto;
+  width: 31rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  border: gray solid 1px;
+  border-radius: 10rem;
+}
+.actions:hover {
+  border: black solid 1px;
+}
+.actions__btn {
+  cursor: pointer;
+  font: inherit;
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0.5rem 1.5rem;
+}
+
+.days_list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.day {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  min-width: 10rem;
+  padding: 1rem;
+}
+.day__word {
+}
+.day__number {
+  font-size: 2rem;
+}
+
+.day--picked {
+  color: white;
+  background: black;
+  border-radius: 10rem;
+}

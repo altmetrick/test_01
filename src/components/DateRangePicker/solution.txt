@@ -1,0 +1,77 @@
+Крч народ. Для чайников как я (хз как я еще не помер от тупости):
+урок направлен на то, чтобы:
+1) иметь возможность формировать строку браузера при изменении фильтров поиска
+2) чтобы иметь возможность обрабатывать данные со строки url и диспатчить getUsers с данными из state или из строки браузера.
+
+За эти операции отвечают 2 useEffect: первый анализ url и диспатч getUsers и второй формирование url на основе фильтров
+ВАЖНО. Для тех кого бесят ошибки типа "вы упустили зависимоти в useEffect": Перед закрытием функции поставьте // eslint-disable-next-line
+
+В комментах много решений текущего решения различия версий. Однако как по мне они либо очень сложные либо вообще не понятные. Я взял за основу код из репозитория этого человека (спасибо ему): @maxim.saharov 
+В свое оправдание хочу отметить что я его полностью перелопатил и для удобства даже закоментил все.
+
+Чтобы все работало как надо предлагаю следующий код:
+Users.tsx
+...
+	const dispatch = useDispatch<appDispatch>()
+	const [searchParams, setSearchParams] = useSearchParams()
+
+	useEffect(() => { //анализируем строку браузера на наличие фильтров и диспатчим санку со стандартными или введенными значениями
+		const result: any = {}
+		// @ts-ignore
+		for (const [key, value] of searchParams.entries()) { // берем ключ значение из url
+			let typedValue: any = +value; // временная переменная которой присваиваем значение превращенное в число
+			if(typeof typedValue === 'number') { //если значение - число, значит это номер страницы потому сразу присваиваем
+				result[key] = value
+			} else if (typeof value === 'string') { // если значение не число то это строка
+				switch (value) { // в которой значения: 'true' или 'false' или строка из поиска
+					case 'true': // если пришло 'true' значит значение из friend
+						result[key] = true; // меняем string на bool сохраняя значение
+						break;
+					case 'false': // если пришло 'false' значит значение из friend
+						result[key] = false; // меняем string на bool сохраняя значение
+						break;
+					default: // если пришло не 'true' и не 'false' значит значение из строки поиска
+						result[key] = value; // присваиваем ничего не меняя
+				}
+			}
+		}
+		// если пришли новые значения из url после определения того какие значения пришли
+		// диспатчим getUsers с новыми параметрами 
+		// если новых параметров нет присваиваем из state - часть после "или" (вторая часть тернарного выражения)
+		let actualPage = result.page || currentPage
+		let term = result.term || filter.term
+		let friend = result.friend || filter.friend
+		// в случае если result.friend = false, без условия у нас установится значение filter.friend = null
+		// потому делаем условие
+		if (result.friend === false) {
+			friend = result.friend
+		}
+		const actualFilter = {term, friend}
+		//при диспатче идет get запрос а также устанавливается filter и actualPage в state
+		dispatch(getUsers(actualPage, pageSize, actualFilter)) 
+	// eslint-disable-next-line
+	}, [])
+
+	useEffect(() => { //формируем новую строку браузера если меняется filter или currentPage
+		const term = filter.term
+		const friend = filter.friend
+		let urlQuery =
+			(term === '' ? '' : `&term=${term}`)
+			+ (friend === null ? '' : `&friend=${friend}`)
+			+ (currentPage === 1 ? '' : `&page=${currentPage}`)
+		setSearchParams(urlQuery) //формируем новую строку браузера
+	// eslint-disable-next-line
+	}, [filter, currentPage]) //если меняется filter или currentPage
+/////////
+UsersSearchForm.tsx: // тут 2 изменения: импорт filter и атрибуты тега Formik
+const filter = useSelector(getUsersFilter)
+...
+		<Formik
+			enableReinitialize
+			initialValues={{
+				term: filter.term,
+				friend: String(filter.friend)
+			}}
+			validate={usersSearchFormValidate}
+			onSubmit={submit}
+		>
