@@ -19,7 +19,6 @@ export type OfferT = {
   meta_activity: number;
   credit_price_override: number;
   credit_price: number;
-  //"date_start": "2023-11-01T11:15:53+01:00",
   date_start: string;
   duration_minute: number;
   effectif: number;
@@ -27,7 +26,7 @@ export type OfferT = {
   recurrence_id: string;
   waiting_list_max_size: number;
   waiting_list_disabled: boolean;
-  bookings: any[];
+  bookings: number[];
   booking_options: any[];
   meta_activity_color: string;
   tot_slots: number;

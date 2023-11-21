@@ -10,6 +10,7 @@ function App() {
       <main>
         <Calendar />
       </main>
+      <footer></footer>
     </div>
   );
 }

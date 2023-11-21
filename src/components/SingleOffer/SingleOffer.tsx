@@ -3,6 +3,7 @@ import styles from './SingleOffer.module.css';
 import { useEffect, useState } from 'react';
 import { CoachT, EstablishmentT, MetaActivityT, OfferT } from '../../types';
 import { axiosInstance } from '../../api/axios-instance';
+import ShowBookings from '../ShowBookings/ShowBookings';
 
 type SingleOfferPropsT = {
   offer: OfferT;
@@ -43,9 +44,7 @@ const SingleOffer: React.FunctionComponent<SingleOfferPropsT> = ({ offer }) => {
     getData();
   }, [offer]);
 
-  if (status === 'loading') {
-    return <div>Loading...</div>;
-  }
+  if (status === 'loading') return <div>Loading</div>;
 
   return (
     <div className={`${styles['offer_card']}`}>
@@ -58,13 +57,17 @@ const SingleOffer: React.FunctionComponent<SingleOfferPropsT> = ({ offer }) => {
       </div>
 
       <div className={`${styles['offer_card__info']}`}>
-        <div className={styles['info__activity']}>
-          <span className={styles['activity__name']}>{activity?.name}</span>
-          <span className={styles['activity__level']}>level: {offer.level}</span>
-        </div>
-        <div>coach: {coach?.user.name}</div>
+        <div>
+          <div className={styles['info__activity']}>
+            <span className={styles['activity__name']}>{activity?.name}</span>
+            <span className={styles['activity__level']}>level: {offer.level}</span>
+          </div>
+          <div>coach: {coach?.user.name}</div>
 
-        <div>{establishment ? `location: ${establishment.location.address_line_1}` : ' '}</div>
+          <div>{establishment ? `location: ${establishment.location.address_line_1}` : ' '}</div>
+        </div>
+
+        <ShowBookings bookingsIds={offer.bookings} />
       </div>
     </div>
   );
