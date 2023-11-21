@@ -11,7 +11,7 @@ const OffersList = () => {
   if (offers === undefined || offers.length === 0) {
     return (
       <div>
-        <h3>There're no offers this day</h3>
+        <h2>There're no offers this day</h2>
       </div>
     );
   }

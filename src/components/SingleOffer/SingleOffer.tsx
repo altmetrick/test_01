@@ -57,13 +57,14 @@ const SingleOffer: React.FunctionComponent<SingleOfferPropsT> = ({ offer }) => {
         />
       </div>
 
-      <div>
-        <div>
-          Activity: {activity?.name} <span>level: {offer.level}</span>
+      <div className={`${styles['offer_card__info']}`}>
+        <div className={styles['info__activity']}>
+          <span className={styles['activity__name']}>{activity?.name}</span>
+          <span className={styles['activity__level']}>level: {offer.level}</span>
         </div>
-        <div>Coach: {coach?.user.name}</div>
+        <div>coach: {coach?.user.name}</div>
 
-        <div>{establishment ? establishment.location.address_line_1 : ' '}</div>
+        <div>{establishment ? `location: ${establishment.location.address_line_1}` : ' '}</div>
       </div>
     </div>
   );
